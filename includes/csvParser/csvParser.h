@@ -1,11 +1,6 @@
 #ifndef CSVPARSER_H
 #define CSVPARSER_H
 
-// 
-
-
-
-
 #include <fstream>
 #include <vector>
 
@@ -30,4 +25,4 @@ std::vector<std::vector<std::string>> csvParse(std::string filePath);
 */
 std::vector<std::string> lineParse(std::string line, char delim);
 
-#endif //CSVPARSER
+#endif //CSVPARSER_H
