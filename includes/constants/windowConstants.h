@@ -26,6 +26,6 @@ const sf::Color graphColor(75,75,75);
 const sf::Color graphLineColor(45,45,45);
 const sf::Color sidePanelColor(100,100,100);
 
-const int DEFAULT_HIGH_VALUE = 40;
+const int DEFAULT_RANGE = 40;
 
 #endif // WINDOW_CONSTANTS_H

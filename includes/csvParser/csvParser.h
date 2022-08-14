@@ -7,7 +7,7 @@
 /*
     \brief Opens and parses a .csv file.
 
-    The first vector (0) contains the names of the columns. 
+    The first value of each vector contains the names of each respective column. 
 
     \param fileName location of csv file to read (usually relative).
 

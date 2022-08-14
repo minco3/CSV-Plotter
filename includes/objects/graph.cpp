@@ -1,61 +1,73 @@
 #include "graph.h"
 
 graphObj::graphObj() {
-    //load shared font
-    if(!font.loadFromFile(fontPath)) {
-        throw ("font not found");
-    }
+
+    // //fill lines vector with default range of default width rectangles
+    // for (int i=0; i<DEFAULT_RANGE; i++) {
+    //     lines.emplace_back(sf::Vector2f(SCREEN_WIDTH/DEFAULT_RANGE,1));
+    // }
+}
+
+graphObj::graphObj(std::vector<std::string> _data) {
+    setData(_data);
 }
 
 void graphObj::draw(sf::RenderWindow& window) {
-
-}
-
-void graphObj::loadCSV(const std::string& path) {
-    //load and parse data
-    //TODO: add way to select file from app
-    //TODO: make loading csv happen async
-    //TODO: make loading csv update graph
-    data = csvParse(path);
-
-    //import csv data into graph
-    sidePanel.clear();
-    for (int i=1; i<data[0].size(); i++) {
-        sidePanel.addEntry(sf::Text(data[0][i], font));
+    window.setView(view);
+    window.clear(graphColor);
+    for (int i=0; i<lines.size(); i++) {
+        window.draw(lines[i]);
     }
-
-    update();
 }
 
-void graphObj::update() {
-    //calculate where lines go
-}
+void graphObj::update() { //calculate where lines go
 
-void graphObj::run() {
+    float value1, value2;
 
-    //create window object using default parameters
-    window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT),
-                        "CSV Grapher"
-                        );
+    xRange = xMax-xMin; // might be set elsewhere at some point
 
-    //main loop
-    while(window.isOpen()) {
 
-        // Process events
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            switch (event.type) {
-                case sf::Event::Closed:
-                    window.close();
-                break;
-            }
+    for (int i=17; i<18; i++) { // skipping x axis of graph
+
+    value1 = stof(data[xMin+1]);
+
+    //get local min and max y values to scale graph properly
+    getRange(data, xMin, xMax, yMin, yMax, yRange);
+
+    std::cout << yMin << " " << yMax << " " << yRange;
+
+        for (int j=0; j<xRange&&j<data[0].size()-1; j++) {
+
+            value2 = stof(data[j+xMin+2]);
+
+            if(j==lines.size()) lines.emplace_back();
+
+            //calculate rotation position and length of each segment
+            lines[j].setPosition(j*view.getSize().x/xRange, fabs(((value1-yMin)/yRange*view.getSize().y)-view.getSize().y));
+            std::cout<<"\nheight = " << (value1-yMin)/yRange*view.getSize().y; 
+
+            int xWidthPixels = view.getSize().x/xRange;
+            float yHeightPixels = (value2-value1)*(view.getSize().y/yRange);
+
+            std::cout << " x" << xWidthPixels << " y" << yHeightPixels;
+
+            float length = sqrt(pow(xWidthPixels,2)+powf(yHeightPixels,2));
+
+            lines[j].setSize(sf::Vector2f(length,1));
+            std::cout<<" length = " << length;
+
+            float rotation = -atanf(yHeightPixels/xWidthPixels)*180.f/M_PI;
+
+            lines[j].setRotation(rotation);
+            std::cout << " Rotation " << rotation;
+
+            
+            value1 = value2;
         }
-
-        //clear the frame
-        window.clear();
-
-        //display frame
-        window.display();
     }
+}
+
+void graphObj::setData(const std::vector<std::string> _data) {
+    data = _data;
+    update();
 }

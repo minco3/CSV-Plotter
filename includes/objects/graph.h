@@ -1,6 +1,9 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#define _USE_MATH_DEFINES
+
+#include <math.h>
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -8,32 +11,32 @@
 #include "sidePanel.h"
 #include "../csvParser/csvParser.h"
 
+#include "../graphTools/graphTools.h"
+
 class graphObj { // graph application which displays csv data
 
     public:
     /*
-        \brief Default contstructor. Used at initialization of the window.
+        \brief Default contstructor. Used at initialization of the graph.
     */
     graphObj();
 
-    private:
+    public:
+    /*
+        \brief Constructor using data parsed before initialization of graph.
+    */
+    graphObj(std::vector<std::string> _data);
+
+    public:
     /* 
         \brief Draws graph object to RenderWindow
 
         \param window sf::RenderWindow to draw to
-    
+
     */ 
     void draw(sf::RenderWindow& window);
 
-    private:
-    /*
-        \brief loads CSV from file and loads data
-
-        \param path path to load CSV from
-    */
-    void loadCSV(const std::string& path);
-
-    private:
+    public:
     /*
         \brief updates the lines on the graph from data
     */
@@ -41,20 +44,19 @@ class graphObj { // graph application which displays csv data
 
     public:
     /*
-        \brief opens the window and starts the main loop
+        \brief Used for setting the data of the graph.
     */
-    void run();
-
+    void setData(const std::vector<std::string> _data);
 
     private:
-    sf::RenderWindow window;
-    sf::View graph;
-    sf::FloatRect location;
-    sidePanelObj sidePanel;
+    std::vector<std::string> data;
+    sf::View view;
     sf::Font font;
-    std::vector<std::vector<std::string>> data;
-    int low = 0;
-    int high = DEFAULT_HIGH_VALUE;
+    std::vector<sf::RectangleShape> lines;
+    int xMin = 0;
+    int xMax = xMin + DEFAULT_RANGE;
+    int xRange = xMax - xMin;
+    float yMin, yMax, yRange;
 };
 
 #endif //GRAPH_H

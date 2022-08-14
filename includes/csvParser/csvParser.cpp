@@ -19,13 +19,23 @@ std::vector<std::vector<std::string>> csvParse(std::string filePath) {
     //parse file
 
     //store titles of columns
-    std::vector<std::string> titles;
+    std::vector<std::string> values;
     std::string line;
+
+    //for the first line, add new vectors so lines are stored vertically
+    std::getline(csvStream, line, '\n');
+    values = lineParse(line, ',');
+    for (int i=0; i<values.size(); i++){
+        result.emplace_back();
+        result[i].push_back(values[i]);
+    }
     
     //get each line, parse it, and add it to result vector
     while (std::getline(csvStream, line, '\n')) {
-        titles = lineParse(line, ',');
-        result.push_back(titles);
+        values = lineParse(line, ',');
+        for (int i=0; i<values.size(); i++){
+            result[i].push_back(values[i]);
+        }
     }
 
     return result;
