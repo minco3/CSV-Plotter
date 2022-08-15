@@ -17,9 +17,11 @@ class hoverableText { //simple class used for pairing a text object with a backg
     \brief simple constructor
     \param text Text to put inside hoverableText
     */
-    hoverableText(sf::Text text);
+    hoverableText(sf::Text _text);
 
-    void move(const float& x, const float& y) {_text.move(x,y); _highlight.move(x,y);};
+    void move(const float& x, const float& y) {text.move(x,y); highlight.move(x,y);};
+
+    void setPosition(sf::Vector2f pos) {text.setPosition(pos); highlight.setPosition(pos);}
 
     /*
     \brief function used to draw the hoverableText object and calculate correct alpha for highlight
@@ -29,8 +31,8 @@ class hoverableText { //simple class used for pairing a text object with a backg
 
     bool hovering; // true if mouse is on the text
 
-    sf::Text _text;
-    sf::RectangleShape _highlight;
+    sf::Text text;
+    sf::RectangleShape highlight;
 };
 
 #endif //HOVERABLE_TEXT_H

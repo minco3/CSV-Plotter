@@ -18,8 +18,8 @@ void app::loadCSV(const std::string& path) {
 
     //add names of columns to side panel
     sidePanel.clear();
-    for (int i=1; i<data[0].size(); i++) {
-        sidePanel.addEntry(sf::Text(data[0][i], font));
+    for (int i=0; i<GRAPH_COUNT&&i<data.size()-1; i++) {
+        sidePanel.addEntry(sf::Text(data[i+1][0], font));
     }
 
     for (int i=0; i<graphs.size(); i++) {
@@ -30,14 +30,25 @@ void app::loadCSV(const std::string& path) {
 
 void app::run() {
 
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 16;
+
     //create window object using default parameters
     window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT),
-                        "CSV Grapher"
+                        "CSV Grapher",
+                        sf::Style::Default,
+                        settings // antialiasing
                         );
 
     loadCSV("resources/sat_realtime_telemetry.csv");
 
-    graphs.emplace_back(data[1]);
+
+    for (int i=0; i<GRAPH_COUNT; i++) {
+
+        graphs.emplace_back(data[i+1], sf::FloatRect(0,1.f/GRAPH_COUNT*i,1-SIDEPANEL_WIDTH,1.f/GRAPH_COUNT));
+    }
+
+    sidePanel.view.setViewport(sf::FloatRect(1.f-SIDEPANEL_WIDTH,0.f,SIDEPANEL_WIDTH,1.f));
 
     //main loop
     while(window.isOpen()) {
@@ -54,16 +65,36 @@ void app::run() {
                     std::cout << event.mouseButton.x << " " << event.mouseButton.y << '\n'; 
                     //update();
                 break;
+                case sf::Event::Resized:
+                    // update the view to the new size of the window
+                    sf::FloatRect visibleArea(0.f, 0.f, event.size.width, event.size.height);
+                    window.setView(sf::View(visibleArea));
+                    for(int i=0; i<graphs.size(); i++) {
+                        graphs[i].setView(sf::FloatRect(graphs[i].getView().left,
+                                                        graphs[i].getView().top,
+                                                        graphs[i].getView().width*event.size.width,
+                                                        graphs[i].getView().height*event.size.height));
+                        graphs[i].update();
+                    }
+                    sidePanel.setView(sf::FloatRect(    sidePanel.getView().left,
+                                                        sidePanel.getView().top,
+                                                        sidePanel.getView().width*event.size.width,
+                                                        sidePanel.getView().height*event.size.height));
+                    window.setView(sf::View(visibleArea));
+                break;
             }
         }
 
         //clear the frame
+        window.setView(window.getDefaultView());
         window.clear(graphColor);
 
         for (int i=0; i<graphs.size(); i++) {
             //draw lines on graphs
             graphs[i].draw(window);
         }
+
+        sidePanel.draw(window);
 
         //display frame
         window.display();
