@@ -79,6 +79,7 @@ class graphObj { // graph application which displays csv data
     int xMax = xMin + DEFAULT_RANGE;
     int xRange = xMax - xMin;
     float yMin, yMax, yRange;
+    sf::RectangleShape background;
 };
 
 #endif //GRAPH_H

@@ -21,17 +21,22 @@ graphObj::graphObj(std::vector<std::string> _data, sf::FloatRect _view, const sf
     max = sf::Text("0", _font, 18);
     max.setOrigin(0.f, max.getGlobalBounds().height);
     max.setPosition(0,view.getSize().y-10);
+
+    background.setFillColor(graphColor);
+    background.setSize(view.getSize());
 }
 
 void graphObj::draw(sf::RenderWindow& window) {
     window.setView(view); //draw to graph view
 
-    window.draw(min);
-    window.draw(max);
+    window.draw(background);
 
     for (int i=0; i<lines.size(); i++) {
         window.draw(lines[i]);
     }
+
+    window.draw(min);
+    window.draw(max);
 }
 
 void graphObj::update() { //calculate where lines go
@@ -98,6 +103,7 @@ void graphObj::setData(const std::vector<std::string> _data) {
 void graphObj::setView(const sf::FloatRect _view) {
     view.reset(_view);
     max.setPosition(0,view.getSize().y-10);
+    background.setSize(view.getSize());
 }
 
 sf::FloatRect graphObj::getView() {

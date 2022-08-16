@@ -86,7 +86,7 @@ void app::run() {
 
         //clear the frame
         window.setView(window.getDefaultView());
-        window.clear(graphColor);
+        window.clear(graphLineColor);
 
         for (int i=0; i<graphs.size(); i++) {
             //draw lines on graphs
