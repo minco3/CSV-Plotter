@@ -11,13 +11,24 @@ graphObj::graphObj(std::vector<std::string> _data, sf::View _view) {
     setData(_data);
 }
 
-graphObj::graphObj(std::vector<std::string> _data, sf::FloatRect _view) {
+graphObj::graphObj(std::vector<std::string> _data, sf::FloatRect _view, const sf::Font& _font) {
+    view.reset(sf::FloatRect(0,0,SCREEN_WIDTH*_view.width, SCREEN_HEIGHT*_view.height));
     view.setViewport(_view);
     setData(_data);
+
+    min = sf::Text("0", _font, 18);
+
+    max = sf::Text("0", _font, 18);
+    max.setOrigin(0.f, max.getGlobalBounds().height);
+    max.setPosition(0,view.getSize().y-10);
 }
 
 void graphObj::draw(sf::RenderWindow& window) {
-    window.setView(view);
+    window.setView(view); //draw to graph view
+
+    window.draw(min);
+    window.draw(max);
+
     for (int i=0; i<lines.size(); i++) {
         window.draw(lines[i]);
     }
@@ -38,6 +49,11 @@ void graphObj::update() { //calculate where lines go
     getRange(data, xMin, xMax, yMin, yMax, yRange);
 
     if (debug) std::cout << "data.size() " << data.size() << " xMin: " << xMin << " xMax: " << xMax << " xRange " << xRange << " yMin " << yMin << " yMax " << yMax << " yRange " << yRange;
+
+
+    //set range labels
+    min.setString(std::to_string(yMin)); 
+    max.setString(std::to_string(yMax));
 
         for (int j=0; j<xRange&&j<data.size()-1; j++) {
 
@@ -81,6 +97,7 @@ void graphObj::setData(const std::vector<std::string> _data) {
 
 void graphObj::setView(const sf::FloatRect _view) {
     view.reset(_view);
+    max.setPosition(0,view.getSize().y-10);
 }
 
 sf::FloatRect graphObj::getView() {

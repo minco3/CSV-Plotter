@@ -1,5 +1,5 @@
-#ifndef SIDE_PANEL_H
-#define SIDE_PANEL_H
+#ifndef TIMELINE_H
+#define TIMELINE_H
 
 #include <cassert>
 #include <sstream>
@@ -11,12 +11,12 @@
 #include "../constants/windowConstants.h"
 #include "../random/random.h"
 
-class sidePanelObj {
+class timelineObj {
 
 
     public:
-    sidePanelObj();
-    sidePanelObj(sf::FloatRect _view);
+    timelineObj();
+    timelineObj(sf::FloatRect _view);
 
     void draw(sf::RenderWindow& window);
     void addEntry(const sf::Text& entry);
@@ -30,8 +30,7 @@ class sidePanelObj {
     void setView(const sf::FloatRect& _view); //resets view
 
     std::vector<hoverableText> expressionList;
-    sf::RectangleShape background;
     sf::View view;
 };
 
-#endif //SIDE_PANEL_H
+#endif // TIMELINE_h

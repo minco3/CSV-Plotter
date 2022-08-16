@@ -31,7 +31,7 @@ class graphObj { // graph application which displays csv data
     /*
         \brief Constructor using data parsed before initialization of graph and a sf::floatRect which will be constructed into a view.
     */
-    graphObj(std::vector<std::string> _data, sf::FloatRect _view);
+    graphObj(std::vector<std::string> _data, sf::FloatRect _view, const sf::Font& _font);
 
 
     public:
@@ -71,9 +71,9 @@ class graphObj { // graph application which displays csv data
     sf::FloatRect getView();
 
     private:
+    sf::Text min, max;
     std::vector<std::string> data;
     sf::View view;
-    sf::Font font;
     std::vector<sf::RectangleShape> lines;
     int xMin = 0;
     int xMax = xMin + DEFAULT_RANGE;

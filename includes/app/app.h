@@ -9,6 +9,7 @@
 
 #include "../objects/sidePanel.h"
 #include "../objects/graph.h"
+#include "../objects/timeline.h"
 
 class app {
 
@@ -37,7 +38,9 @@ class app {
     std::vector<graphObj> graphs;
     std::vector<std::vector<std::string>> data;
     sidePanelObj sidePanel;
+    timelineObj timeline;
     sf::Font font;
+    sf::RectangleShape graphDividers;
 
 };
 

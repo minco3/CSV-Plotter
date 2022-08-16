@@ -19,6 +19,8 @@ const int GRAPH_LINE_COUNT = 32; // ONE AXIS
 
 const float LINE_WIDTH = 2.f;
 
+const float DIVIDER_WIDTH = 0.005f;
+
 const sf::Color graphColor(75,75,75);
 const sf::Color graphLineColor(45,45,45);
 const sf::Color sidePanelColor(100,100,100);

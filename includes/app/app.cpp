@@ -16,11 +16,7 @@ void app::loadCSV(const std::string& path) {
 
     //import csv data into graph 
 
-    //add names of columns to side panel
-    sidePanel.clear();
-    for (int i=0; i<GRAPH_COUNT&&i<data.size()-1; i++) {
-        sidePanel.addEntry(sf::Text(data[i+1][0], font));
-    }
+
 
     for (int i=0; i<graphs.size(); i++) {
         graphs[i].update();
@@ -43,12 +39,16 @@ void app::run() {
     loadCSV("resources/sat_realtime_telemetry.csv");
 
 
-    for (int i=0; i<GRAPH_COUNT; i++) {
+    for (int i=0; i<GRAPH_COUNT&&i<data.size()-1; i++) {
 
-        graphs.emplace_back(data[i+1], sf::FloatRect(0,1.f/GRAPH_COUNT*i,1-SIDEPANEL_WIDTH,1.f/GRAPH_COUNT));
+        //add graphs
+        graphs.emplace_back(data[i+1], sf::FloatRect(0,1.f/(GRAPH_COUNT+1)*i,1-SIDEPANEL_WIDTH,(1.f-DIVIDER_WIDTH*(GRAPH_COUNT+1))/(GRAPH_COUNT+1)), font);
+
+        //add names of columns to side panel
+        sidePanel.addEntry(sf::Text(data[i+1][0], font, 18));
     }
 
-    sidePanel.view.setViewport(sf::FloatRect(1.f-SIDEPANEL_WIDTH,0.f,SIDEPANEL_WIDTH,1.f));
+    sidePanel.view.setViewport(sf::FloatRect(1.f-SIDEPANEL_WIDTH,0.f,1.f,1.f));
 
     //main loop
     while(window.isOpen()) {
@@ -67,8 +67,7 @@ void app::run() {
                 break;
                 case sf::Event::Resized:
                     // update the view to the new size of the window
-                    sf::FloatRect visibleArea(0.f, 0.f, event.size.width, event.size.height);
-                    window.setView(sf::View(visibleArea));
+                    window.setView(sf::View(sf::FloatRect(0.f, 0.f, event.size.width, event.size.height)));
                     for(int i=0; i<graphs.size(); i++) {
                         graphs[i].setView(sf::FloatRect(graphs[i].getView().left,
                                                         graphs[i].getView().top,
@@ -76,11 +75,11 @@ void app::run() {
                                                         graphs[i].getView().height*event.size.height));
                         graphs[i].update();
                     }
-                    sidePanel.setView(sf::FloatRect(    sidePanel.getView().left,
-                                                        sidePanel.getView().top,
-                                                        sidePanel.getView().width*event.size.width,
-                                                        sidePanel.getView().height*event.size.height));
-                    window.setView(sf::View(visibleArea));
+
+                    sidePanel.setView(sf::FloatRect(   sidePanel.getView().left,
+                                                       sidePanel.getView().top,
+                                                       sidePanel.getView().width*event.size.width,
+                                                       sidePanel.getView().height*event.size.height));
                 break;
             }
         }
