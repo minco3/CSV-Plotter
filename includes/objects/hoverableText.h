@@ -23,6 +23,10 @@ class hoverableText { //simple class used for pairing a text object with a backg
 
     void setPosition(sf::Vector2f pos) {text.setPosition(pos); highlight.setPosition(pos);}
 
+    void rotate(const float& degrees) {text.rotate(degrees); highlight.rotate(degrees);}
+
+    void setRotation(const float& degrees) {text.setRotation(degrees); highlight.setRotation(degrees);}
+
     /*
     \brief function used to draw the hoverableText object and calculate correct alpha for highlight
     \param window RenderWindow to draw to

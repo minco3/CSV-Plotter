@@ -1,0 +1,5 @@
+ TODO: add way to select file from app
+ TODO: make loading csv happen async
+ TODO: make loading csv update graph
+ TODO: add events for zooming and scrolling
+    - scrollbar

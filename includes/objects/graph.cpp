@@ -6,21 +6,16 @@ graphObj::graphObj() {
 
 }
 
-graphObj::graphObj(std::vector<std::string> _data, sf::View _view) {
-    view = _view;
-    setData(_data);
-}
-
 graphObj::graphObj(std::vector<std::string> _data, sf::FloatRect _view, const sf::Font& _font) {
     view.reset(sf::FloatRect(0,0,SCREEN_WIDTH*_view.width, SCREEN_HEIGHT*_view.height));
     view.setViewport(_view);
     setData(_data);
 
-    min = sf::Text("0", _font, 18);
-
     max = sf::Text("0", _font, 18);
-    max.setOrigin(0.f, max.getGlobalBounds().height);
-    max.setPosition(0,view.getSize().y-10);
+
+    min = sf::Text("0", _font, 18);
+    min.setOrigin(0.f, min.getGlobalBounds().height);
+    min.setPosition(0,view.getSize().y-10);
 
     background.setFillColor(graphColor);
     background.setSize(view.getSize());
@@ -102,7 +97,7 @@ void graphObj::setData(const std::vector<std::string> _data) {
 
 void graphObj::setView(const sf::FloatRect _view) {
     view.reset(_view);
-    max.setPosition(0,view.getSize().y-10);
+    min.setPosition(0,view.getSize().y-10);
     background.setSize(view.getSize());
 }
 

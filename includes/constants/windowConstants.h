@@ -14,6 +14,7 @@ const std::string fontPath = "resources/NotoSans-Medium.ttf";
 const int CONST_SCALE = 30;
 
 const float SIDEPANEL_WIDTH = 0.2f;
+const float GRAPH_WIDTH = 0.795f;
 
 const int GRAPH_LINE_COUNT = 32; // ONE AXIS
 
@@ -27,6 +28,10 @@ const sf::Color sidePanelColor(100,100,100);
 
 const int DEFAULT_RANGE = 40;
 
+const int TIMESTAMP_COUNT = 10;
+
 const int GRAPH_COUNT = 10;
+
+const float GRAPH_HEIGHT = 1.f/(GRAPH_COUNT+1); // +1 is for timeline
 
 #endif // WINDOW_CONSTANTS_H

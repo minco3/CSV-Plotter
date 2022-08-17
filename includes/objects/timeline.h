@@ -31,6 +31,8 @@ class timelineObj {
 
     std::vector<hoverableText> expressionList;
     sf::View view;
+
+    sf::RectangleShape background;
 };
 
 #endif // TIMELINE_h

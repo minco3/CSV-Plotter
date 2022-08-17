@@ -9,9 +9,6 @@ app::app() {
 
 void app::loadCSV(const std::string& path) {
     //load and parse data
-    //TODO: add way to select file from app
-    //TODO: make loading csv happen async
-    //TODO: make loading csv update graph
     data = csvParse(path);
 
     //import csv data into graph 
@@ -38,17 +35,30 @@ void app::run() {
 
     loadCSV("resources/sat_realtime_telemetry.csv");
 
+    //add side panel
+    sidePanel = sidePanelObj(sf::FloatRect(1.f-SIDEPANEL_WIDTH, 0.f, SIDEPANEL_WIDTH, 1.f));
+
+    //add timeline
+    timeline = timelineObj(sf::FloatRect(0, GRAPH_COUNT*GRAPH_HEIGHT, GRAPH_WIDTH, GRAPH_HEIGHT));
 
     for (int i=0; i<GRAPH_COUNT&&i<data.size()-1; i++) {
 
         //add graphs
-        graphs.emplace_back(data[i+1], sf::FloatRect(0,1.f/(GRAPH_COUNT+1)*i,1-SIDEPANEL_WIDTH,(1.f-DIVIDER_WIDTH*(GRAPH_COUNT+1))/(GRAPH_COUNT+1)), font);
+        graphs.emplace_back(data[i+1],
+                            sf::FloatRect(0,
+                                          GRAPH_HEIGHT*i,
+                                          GRAPH_WIDTH,
+                                          (1.f-DIVIDER_WIDTH*(GRAPH_COUNT+1))*GRAPH_HEIGHT),
+                            font);
 
         //add names of columns to side panel
         sidePanel.addEntry(sf::Text(data[i+1][0], font, 18));
+
     }
 
-    sidePanel.view.setViewport(sf::FloatRect(1.f-SIDEPANEL_WIDTH,0.f,1.f,1.f));
+    for (int i=0; i<TIMESTAMP_COUNT; i++) {
+        timeline.addEntry(sf::Text(data[0][DEFAULT_RANGE/TIMESTAMP_COUNT*i+1], font, 15));
+    }
 
     //main loop
     while(window.isOpen()) {
@@ -80,6 +90,11 @@ void app::run() {
                                                        sidePanel.getView().top,
                                                        sidePanel.getView().width*event.size.width,
                                                        sidePanel.getView().height*event.size.height));
+
+                    timeline.setView(sf::FloatRect(   timeline.getView().left,
+                                                       timeline.getView().top,
+                                                       timeline.getView().width*event.size.width,
+                                                       timeline.getView().height*event.size.height));
                 break;
             }
         }
@@ -88,13 +103,18 @@ void app::run() {
         window.setView(window.getDefaultView());
         window.clear(graphLineColor);
 
+        //draw elements
         for (int i=0; i<graphs.size(); i++) {
             //draw lines on graphs
             graphs[i].draw(window);
         }
 
+        //draw side panel
         sidePanel.draw(window);
 
+        //draw timeline
+        timeline.draw(window);
+        
         //display frame
         window.display();
     }
