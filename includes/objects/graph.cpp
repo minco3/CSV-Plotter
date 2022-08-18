@@ -19,6 +19,8 @@ graphObj::graphObj(std::vector<std::string> _data, sf::FloatRect _view, const sf
 
     background.setFillColor(graphColor);
     background.setSize(view.getSize());
+
+    update();
 }
 
 void graphObj::draw(sf::RenderWindow& window) {

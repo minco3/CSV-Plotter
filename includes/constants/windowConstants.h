@@ -26,11 +26,11 @@ const sf::Color graphColor(75,75,75);
 const sf::Color graphLineColor(45,45,45);
 const sf::Color sidePanelColor(100,100,100);
 
-const int DEFAULT_RANGE = 40;
+const int DEFAULT_RANGE = 2000;
 
 const int TIMESTAMP_COUNT = 10;
 
-const int GRAPH_COUNT = 10;
+const int GRAPH_COUNT = 20;
 
 const float GRAPH_HEIGHT = 1.f/(GRAPH_COUNT+1); // +1 is for timeline
 

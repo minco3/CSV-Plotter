@@ -40,6 +40,7 @@ class app {
     sidePanelObj sidePanel;
     timelineObj timeline;
     sf::Font font;
+    sf::RectangleShape verticalBar;
 
 };
 

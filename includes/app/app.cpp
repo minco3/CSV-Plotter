@@ -5,6 +5,9 @@ app::app() {
     if(!font.loadFromFile(fontPath)) {
         throw ("font not found");
     }
+
+    verticalBar.setFillColor(sf::Color::Black);
+    verticalBar.setSize(sf::Vector2f(LINE_WIDTH+1,SCREEN_HEIGHT-SCREEN_HEIGHT*(GRAPH_HEIGHT+DIVIDER_WIDTH)));
 }
 
 void app::loadCSV(const std::string& path) {
@@ -73,7 +76,11 @@ void app::run() {
                 break;
                 case sf::Event::MouseButtonPressed:
                     std::cout << event.mouseButton.x << " " << event.mouseButton.y << '\n'; 
-                    //update();
+                break;
+                case sf::Event::MouseMoved:
+                    if (event.mouseMove.x<window.getSize().x*GRAPH_WIDTH) {
+                        verticalBar.setPosition(event.mouseMove.x, 0);
+                    }
                 break;
                 case sf::Event::Resized:
                     // update the view to the new size of the window
@@ -86,15 +93,17 @@ void app::run() {
                         graphs[i].update();
                     }
 
-                    sidePanel.setView(sf::FloatRect(   sidePanel.getView().left,
-                                                       sidePanel.getView().top,
-                                                       sidePanel.getView().width*event.size.width,
-                                                       sidePanel.getView().height*event.size.height));
+                    sidePanel.setView(sf::FloatRect(sidePanel.getView().left,
+                                                    sidePanel.getView().top,
+                                                    sidePanel.getView().width*event.size.width,
+                                                    sidePanel.getView().height*event.size.height));
 
-                    timeline.setView(sf::FloatRect(   timeline.getView().left,
-                                                       timeline.getView().top,
-                                                       timeline.getView().width*event.size.width,
-                                                       timeline.getView().height*event.size.height));
+                    timeline.setView(sf::FloatRect(timeline.getView().left,
+                                                   timeline.getView().top,
+                                                   timeline.getView().width*event.size.width,
+                                                   timeline.getView().height*event.size.height));
+
+                    verticalBar.setSize(sf::Vector2f(LINE_WIDTH+1,event.size.height-event.size.height*(GRAPH_HEIGHT+DIVIDER_WIDTH)));
                 break;
             }
         }
@@ -114,6 +123,12 @@ void app::run() {
 
         //draw timeline
         timeline.draw(window);
+
+        //draw globals on top of panels
+        window.setView(window.getDefaultView());
+
+        //draw vertical bar
+        window.draw(verticalBar);
         
         //display frame
         window.display();
