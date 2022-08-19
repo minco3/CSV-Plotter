@@ -74,7 +74,8 @@ class graphObj { // graph application which displays csv data
     sf::Text min, max;
     std::vector<std::string> data;
     sf::View view;
-    std::vector<sf::RectangleShape> lines;
+    sf::VertexArray vertecies; // can use static array for improved speed
+    int vertexCount = DEFAULT_RANGE*2; // 2 vertecies per point 
     int xMin = 0;
     int xMax = xMin + DEFAULT_RANGE;
     int xRange = xMax - xMin;

@@ -7,7 +7,7 @@ app::app() {
     }
 
     verticalBar.setFillColor(sf::Color::Black);
-    verticalBar.setSize(sf::Vector2f(LINE_WIDTH+1,SCREEN_HEIGHT-SCREEN_HEIGHT*(GRAPH_HEIGHT+DIVIDER_WIDTH)));
+    verticalBar.setSize(sf::Vector2f(LINE_WIDTH,SCREEN_HEIGHT-SCREEN_HEIGHT*(GRAPH_HEIGHT+DIVIDER_WIDTH)));
 }
 
 void app::loadCSV(const std::string& path) {
@@ -83,8 +83,10 @@ void app::run() {
                     }
                 break;
                 case sf::Event::Resized:
+
+                    std::cout << "resized" << std::endl;
+
                     // update the view to the new size of the window
-                    window.setView(sf::View(sf::FloatRect(0.f, 0.f, event.size.width, event.size.height)));
                     for(int i=0; i<graphs.size(); i++) {
                         graphs[i].setView(sf::FloatRect(graphs[i].getView().left,
                                                         graphs[i].getView().top,
@@ -104,6 +106,8 @@ void app::run() {
                                                    timeline.getView().height*event.size.height));
 
                     verticalBar.setSize(sf::Vector2f(LINE_WIDTH+1,event.size.height-event.size.height*(GRAPH_HEIGHT+DIVIDER_WIDTH)));
+                    
+                    window.setView(sf::View(sf::FloatRect(0.f, 0.f, event.size.width, event.size.height)));
                 break;
             }
         }
@@ -129,7 +133,7 @@ void app::run() {
 
         //draw vertical bar
         window.draw(verticalBar);
-        
+
         //display frame
         window.display();
     }

@@ -7,9 +7,9 @@ graphObj::graphObj() {
 }
 
 graphObj::graphObj(std::vector<std::string> _data, sf::FloatRect _view, const sf::Font& _font) {
+
     view.reset(sf::FloatRect(0,0,SCREEN_WIDTH*_view.width, SCREEN_HEIGHT*_view.height));
     view.setViewport(_view);
-    setData(_data);
 
     max = sf::Text("0", _font, 18);
 
@@ -20,7 +20,11 @@ graphObj::graphObj(std::vector<std::string> _data, sf::FloatRect _view, const sf
     background.setFillColor(graphColor);
     background.setSize(view.getSize());
 
-    update();
+    vertecies = sf::VertexArray(sf::TriangleStrip, static_cast<std::size_t>(vertexCount));
+
+    std::cout << vertecies.getVertexCount();
+
+    setData(_data);
 }
 
 void graphObj::draw(sf::RenderWindow& window) {
@@ -28,9 +32,7 @@ void graphObj::draw(sf::RenderWindow& window) {
 
     window.draw(background);
 
-    for (int i=0; i<lines.size(); i++) {
-        window.draw(lines[i]);
-    }
+    window.draw(vertecies);
 
     window.draw(min);
     window.draw(max);
@@ -52,42 +54,54 @@ void graphObj::update() { //calculate where lines go
 
     if (debug) std::cout << "data.size() " << data.size() << " xMin: " << xMin << " xMax: " << xMax << " xRange " << xRange << " yMin " << yMin << " yMax " << yMax << " yRange " << yRange;
 
-
     //set range labels
     min.setString(std::to_string(yMin)); 
     max.setString(std::to_string(yMax));
 
+
         for (int j=0; j<xRange&&j<data.size()-1; j++) {
+
+            int x, y;
+
+            float yHeightPixels = (value2-value1)*(view.getSize().y/yRange);
+            int xWidthPixels = view.getSize().x/xRange;
 
             value2 = stof(data[j+xMin+2]);
 
-            if(j==lines.size()) lines.emplace_back();
+            //calculate position of each vertex
+            x = j*view.getSize().x/xRange; 
+            y = fabs(((value1-yMin)/yRange*view.getSize().y)-view.getSize().y);
 
-            //calculate rotation position and length of each segment
-            lines[j].setPosition(j*view.getSize().x/xRange, fabs(((value1-yMin)/yRange*view.getSize().y)-view.getSize().y));
+
             if (debug) std::cout<<"\nline [" << j << "] height = " << (value1-yMin)/yRange*view.getSize().y; 
-
-            int xWidthPixels = view.getSize().x/xRange;
-            float yHeightPixels = (value2-value1)*(view.getSize().y/yRange);
 
             if (debug) std::cout << " x: " << j*view.getSize().x/xRange << " y: " << yHeightPixels;
 
-            //set length
-            float length = sqrt(pow(xWidthPixels,2)+powf(yHeightPixels,2));
+            // //set length
+            // float length = sqrt(pow(xWidthPixels,2)+powf(yHeightPixels,2));
 
-            lines[j].setSize(sf::Vector2f(length,LINE_WIDTH));
-            if (debug) std::cout<<" length = " << length;
+            // lines[j].setSize(sf::Vector2f(length,LINE_WIDTH));
+            // if (debug) std::cout<<" length = " << length;
 
-            //set rotation
-            float rotation = -atanf(yHeightPixels/xWidthPixels)*180.f/M_PI;
+            // //set rotation
+            // float rotation = -atanf(yHeightPixels/xWidthPixels)*180.f/M_PI;
 
-            lines[j].setRotation(rotation);
-            if (debug) std::cout << " Rotation " << rotation;
+            // lines[j].setRotation(rotation);
+            // if (debug) std::cout << " Rotation " << rotation;
 
+            // push high and low vertex
+
+            if(j*2==vertexCount) {
+                vertexCount+=2;
+                vertecies.resize(vertexCount);
+            }
+
+            vertecies[j*2] = sf::Vertex(sf::Vector2f(x,y+(LINE_WIDTH/2))); // high
+            vertecies[j*2+1] = sf::Vertex(sf::Vector2f(x,y-(LINE_WIDTH/2))); // low
             
             value1 = value2;
         }
-        if (debug) std::cout << "\nline count: " << lines.size();
+        if (debug) std::cout << "\nvertex count: " << vertexCount;
     }
 }
 
