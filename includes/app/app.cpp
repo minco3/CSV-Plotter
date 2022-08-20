@@ -60,7 +60,7 @@ void app::run() {
     }
 
     for (int i=0; i<TIMESTAMP_COUNT; i++) {
-        timeline.addEntry(sf::Text(data[0][DEFAULT_RANGE/TIMESTAMP_COUNT*i+1], font, 15));
+        timeline.addEntry(sf::Text(data[0][DEFAULT_RANGE/TIMESTAMP_COUNT*i+1].substr(11), font, 15));
     }
 
     //main loop
@@ -113,7 +113,6 @@ void app::run() {
         }
 
         //clear the frame
-        window.setView(window.getDefaultView());
         window.clear(graphLineColor);
 
         //draw elements
@@ -129,8 +128,9 @@ void app::run() {
         timeline.draw(window);
 
         //draw globals on top of panels
-        window.setView(window.getDefaultView());
+        window.setView(window.getView());
 
+        
         //draw vertical bar
         window.draw(verticalBar);
 

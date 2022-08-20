@@ -26,7 +26,7 @@ const sf::Color graphColor(75,75,75);
 const sf::Color graphLineColor(45,45,45);
 const sf::Color sidePanelColor(100,100,100);
 
-const int DEFAULT_RANGE = 2000;
+const int DEFAULT_RANGE = 2998;
 
 const int TIMESTAMP_COUNT = 10;
 

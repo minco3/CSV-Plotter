@@ -34,6 +34,7 @@ class app {
     void loadCSV(const std::string& path);
 
     private:
+    sf::View global;
     sf::RenderWindow window;
     std::vector<graphObj> graphs;
     std::vector<std::vector<std::string>> data;

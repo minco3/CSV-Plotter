@@ -53,10 +53,14 @@ void graphObj::update() { //calculate where lines go
     getRange(data, xMin, xMax, yMin, yMax, yRange);
 
     if (debug) std::cout << "data.size() " << data.size() << " xMin: " << xMin << " xMax: " << xMax << " xRange " << xRange << " yMin " << yMin << " yMax " << yMax << " yRange " << yRange;
+    
+    std::string minString(std::to_string(yMin)), maxString(std::to_string(yMax));
+
+    
 
     //set range labels
-    min.setString(std::to_string(yMin)); 
-    max.setString(std::to_string(yMax));
+    min.setString(minString.substr(0, minString.length()-4)); 
+    max.setString(maxString.substr(0, maxString.length()-4));
 
 
         for (int j=0; j<xRange&&j<data.size()-1; j++) {
@@ -72,22 +76,9 @@ void graphObj::update() { //calculate where lines go
             x = j*view.getSize().x/xRange; 
             y = fabs(((value1-yMin)/yRange*view.getSize().y)-view.getSize().y);
 
-
             if (debug) std::cout<<"\nline [" << j << "] height = " << (value1-yMin)/yRange*view.getSize().y; 
 
             if (debug) std::cout << " x: " << j*view.getSize().x/xRange << " y: " << yHeightPixels;
-
-            // //set length
-            // float length = sqrt(pow(xWidthPixels,2)+powf(yHeightPixels,2));
-
-            // lines[j].setSize(sf::Vector2f(length,LINE_WIDTH));
-            // if (debug) std::cout<<" length = " << length;
-
-            // //set rotation
-            // float rotation = -atanf(yHeightPixels/xWidthPixels)*180.f/M_PI;
-
-            // lines[j].setRotation(rotation);
-            // if (debug) std::cout << " Rotation " << rotation;
 
             // push high and low vertex
 
@@ -107,6 +98,7 @@ void graphObj::update() { //calculate where lines go
 
 void graphObj::setData(const std::vector<std::string> _data) {
     data = _data;
+
     update();
 }
 
