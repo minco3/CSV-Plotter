@@ -34,7 +34,7 @@ class app {
     void loadCSV(const std::string& path);
 
     private:
-    sf::View global;
+    sf::View globalView;
     sf::RenderWindow window;
     std::vector<graphObj> graphs;
     std::vector<std::vector<std::string>> data;
@@ -42,6 +42,9 @@ class app {
     timelineObj timeline;
     sf::Font font;
     sf::RectangleShape verticalBar;
+    sf::RectangleShape selectionArea;
+    float selectionStart;
+    bool selecting;
 
 };
 

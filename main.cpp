@@ -14,7 +14,7 @@ int main() {
     //     std::cout<<'\n';
     // }
 
-    //create graph object
+    //create app object
     app application;
     
     //starts main loop

@@ -8,6 +8,10 @@ app::app() {
 
     verticalBar.setFillColor(sf::Color::Black);
     verticalBar.setSize(sf::Vector2f(LINE_WIDTH,SCREEN_HEIGHT-SCREEN_HEIGHT*(GRAPH_HEIGHT+DIVIDER_WIDTH)));
+
+    globalView = sf::View(sf::FloatRect(0.f, 0.f, SCREEN_WIDTH, SCREEN_HEIGHT));
+    selectionArea.setFillColor(SELCTION_COLOR);
+    selectionArea.setSize(sf::Vector2f(0, SCREEN_HEIGHT));
 }
 
 void app::loadCSV(const std::string& path) {
@@ -75,11 +79,40 @@ void app::run() {
                     window.close();
                 break;
                 case sf::Event::MouseButtonPressed:
-                    std::cout << event.mouseButton.x << " " << event.mouseButton.y << '\n'; 
+                    // std::cout << event.mouseButton.x << " " << event.mouseButton.y << '\n'; 
+                    if (event.mouseButton.x<window.getSize().x*GRAPH_WIDTH) {
+                        selecting = true;
+                        selectionStart = event.mouseButton.x;
+                    }
+                break;
+                case sf::Event::MouseButtonReleased:
+                    if (event.mouseButton.button == sf::Mouse::Left ) {
+                        if (selecting) {
+                            selecting = false;
+                            // selecting code
+                            std::cout << "selected area = " << 
+                            (selectionStart>event.mouseButton.x ? selectionStart-event.mouseButton.x : event.mouseButton.x-selectionStart) << std::endl;
+                            
+                            graphs[0].setZoom(selectionStart, event.mouseButton.x);
+                            selectionArea.setSize(sf::Vector2f(0,selectionArea.getSize().y));
+                        }
+                    }
                 break;
                 case sf::Event::MouseMoved:
                     if (event.mouseMove.x<window.getSize().x*GRAPH_WIDTH) {
+                        if (selecting) {
+                            if (event.mouseMove.x<selectionStart) {
+                                selectionArea.setSize(sf::Vector2f(event.mouseMove.x-selectionStart, selectionArea.getSize().y));
+                                selectionArea.setPosition(selectionStart, 0);
+                            } else {
+                                selectionArea.setSize(sf::Vector2f(event.mouseMove.x-selectionStart, selectionArea.getSize().y));
+                                selectionArea.setPosition(selectionStart, 0);
+                            }
+                        }
                         verticalBar.setPosition(event.mouseMove.x, 0);
+
+                    } else if (selecting) {
+                        selecting = false;
                     }
                 break;
                 case sf::Event::Resized:
@@ -105,9 +138,10 @@ void app::run() {
                                                    timeline.getView().width*event.size.width,
                                                    timeline.getView().height*event.size.height));
 
-                    verticalBar.setSize(sf::Vector2f(LINE_WIDTH+1,event.size.height-event.size.height*(GRAPH_HEIGHT+DIVIDER_WIDTH)));
-                    
-                    window.setView(sf::View(sf::FloatRect(0.f, 0.f, event.size.width, event.size.height)));
+                    verticalBar.setSize(sf::Vector2f(LINE_WIDTH+1, event.size.height-event.size.height*(GRAPH_HEIGHT+DIVIDER_WIDTH)));
+                    selectionArea.setSize(sf::Vector2f(0, event.size.height-event.size.height*(GRAPH_HEIGHT+DIVIDER_WIDTH)));
+
+                    globalView = sf::View(sf::FloatRect(0.f, 0.f, event.size.width, event.size.height));
                 break;
             }
         }
@@ -128,11 +162,18 @@ void app::run() {
         timeline.draw(window);
 
         //draw globals on top of panels
-        window.setView(window.getView());
+        window.setView(globalView);
 
+
+        //draw shaded area over selected area
+        if (selecting) {
+            window.draw(selectionArea);
+        }
+        else {
+            //draw vertical bar
+            window.draw(verticalBar);
+        }
         
-        //draw vertical bar
-        window.draw(verticalBar);
 
         //display frame
         window.display();

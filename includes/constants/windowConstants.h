@@ -25,6 +25,7 @@ const float DIVIDER_WIDTH = 0.005f;
 const sf::Color graphColor(75,75,75);
 const sf::Color graphLineColor(45,45,45);
 const sf::Color sidePanelColor(100,100,100);
+const sf::Color SELCTION_COLOR(30,30,30,50);
 
 const int DEFAULT_RANGE = 2998;
 

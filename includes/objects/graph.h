@@ -54,21 +54,29 @@ class graphObj { // graph application which displays csv data
         \brief Used for setting the data of the graph.
         \param _data Vector containing strings with data loaded from the svg
     */
-    void setData(const std::vector<std::string> _data);
+    void setData(const std::vector<std::string>& _data);
 
     public:
     /*
         \brief Used for resetting the 2D "camera" resolution of the view of the graph.
         \param _view sf::View to load the graph to
     */
-    void setView(const sf::FloatRect _view);
+    void setView(const sf::FloatRect& _view);
 
-        public:
+    public:
     /*
-        \brief Used for resetting the 2D "camera" resolution of the view of the graph.
+        \brief gets the 2D "camera" view of the graph.
         \return sf::floatRect with viewport proportions
     */
     sf::FloatRect getView();
+
+    public:
+    /*
+        \brief sets horizontal zoom of graph
+        \param start where selection started
+        \param finish where selection finished
+    */
+    void setZoom(const int& start, const int& finish);
 
     private:
     sf::Text min, max;

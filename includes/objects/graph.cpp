@@ -20,10 +20,6 @@ graphObj::graphObj(std::vector<std::string> _data, sf::FloatRect _view, const sf
     background.setFillColor(graphColor);
     background.setSize(view.getSize());
 
-    vertecies = sf::VertexArray(sf::TriangleStrip, static_cast<std::size_t>(vertexCount));
-
-    std::cout << vertecies.getVertexCount();
-
     setData(_data);
 }
 
@@ -38,7 +34,10 @@ void graphObj::draw(sf::RenderWindow& window) {
     window.draw(max);
 }
 
-void graphObj::update() { //calculate where lines go
+void graphObj::update() { //calculate where vertecies go
+
+    vertecies.clear();
+    vertecies = sf::VertexArray(sf::TriangleStrip, static_cast<std::size_t>(vertexCount));
 
     float value1, value2;
 
@@ -96,14 +95,14 @@ void graphObj::update() { //calculate where lines go
     }
 }
 
-void graphObj::setData(const std::vector<std::string> _data) {
+void graphObj::setData(const std::vector<std::string>& _data) {
     data = _data;
 
     update();
 }
 
 
-void graphObj::setView(const sf::FloatRect _view) {
+void graphObj::setView(const sf::FloatRect& _view) {
     view.reset(_view);
     min.setPosition(0,view.getSize().y-10);
     background.setSize(view.getSize());
@@ -111,4 +110,23 @@ void graphObj::setView(const sf::FloatRect _view) {
 
 sf::FloatRect graphObj::getView() {
     return view.getViewport();
+}
+
+void graphObj::setZoom(const int& start, const int& finish) {
+    int low, high;
+    if (start<finish) {
+        low = start;
+        high = finish;
+    }
+
+    float width = view.getSize().x;
+
+    xMin = xRange*(low/width);
+    xMax = xRange*(high/width);
+
+    xRange = xMax-xMin; 
+
+    std::cout << xMin << " xMax: " << xMax << " xRange " << xRange;
+
+    //update();
 }
