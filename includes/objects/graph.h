@@ -60,7 +60,7 @@ class graphObj { // graph application which displays csv data
     /*
         \brief Used for resetting the 2D "camera" resolution of the view of the graph.
         \param _view sf::View to load the graph to
-    */
+    */  
     void setView(const sf::FloatRect& _view);
 
     public:
@@ -78,12 +78,17 @@ class graphObj { // graph application which displays csv data
     */
     void setZoom(const int& start, const int& finish);
 
+    public:
+    /*
+        \brief resets the zoom of the graph to DEFAULT_RANGE defined in windowConstants.h
+    */
+    void resetZoom();
+
     private:
     sf::Text min, max;
     std::vector<std::string> data;
     sf::View view;
     sf::VertexArray vertecies; // can use static array for improved speed
-    int vertexCount = DEFAULT_RANGE*2; // 2 vertecies per point 
     int xMin = 0;
     int xMax = xMin + DEFAULT_RANGE;
     int xRange = xMax - xMin;

@@ -9,7 +9,8 @@ const int SCREEN_HEIGHT = 1000;
 
 const float VERTICAL_BAR_WIDTH = 2;
 
-const std::string fontPath = "resources/NotoSans-Medium.ttf";
+const std::string FONT_PATH = "resources/NotoSans-Medium.ttf";
+const std::string CSV_PATH = "resources/sat_realtime_telemetry_small.csv";
 
 const int CONST_SCALE = 30;
 
@@ -27,7 +28,7 @@ const sf::Color graphLineColor(45,45,45);
 const sf::Color sidePanelColor(100,100,100);
 const sf::Color SELCTION_COLOR(30,30,30,50);
 
-const int DEFAULT_RANGE = 2998;
+const int DEFAULT_RANGE = 400;
 
 const int TIMESTAMP_COUNT = 10;
 

@@ -2,7 +2,7 @@
 
 app::app() {
     //load shared font
-    if(!font.loadFromFile(fontPath)) {
+    if(!font.loadFromFile(FONT_PATH)) {
         throw ("font not found");
     }
 
@@ -40,7 +40,7 @@ void app::run() {
                         settings // antialiasing
                         );
 
-    loadCSV("resources/sat_realtime_telemetry.csv");
+    loadCSV(CSV_PATH);
 
     //add side panel
     sidePanel = sidePanelObj(sf::FloatRect(1.f-SIDEPANEL_WIDTH, 0.f, SIDEPANEL_WIDTH, 1.f));
@@ -79,21 +79,28 @@ void app::run() {
                     window.close();
                 break;
                 case sf::Event::MouseButtonPressed:
-                    // std::cout << event.mouseButton.x << " " << event.mouseButton.y << '\n'; 
-                    if (event.mouseButton.x<window.getSize().x*GRAPH_WIDTH) {
-                        selecting = true;
-                        selectionStart = event.mouseButton.x;
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        // std::cout << event.mouseButton.x << " " << event.mouseButton.y << '\n'; 
+                        if (event.mouseButton.x<window.getSize().x*GRAPH_WIDTH) {
+                            selecting = true;
+                            selectionStart = event.mouseButton.x;
+                        }
+                    } else if (event.mouseButton.button == sf::Mouse::Right) {
+                        for (int i=0; i<graphs.size(); i++)
+                            graphs[i].resetZoom();
                     }
                 break;
                 case sf::Event::MouseButtonReleased:
-                    if (event.mouseButton.button == sf::Mouse::Left ) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
                         if (selecting) {
                             selecting = false;
                             // selecting code
                             std::cout << "selected area = " << 
                             (selectionStart>event.mouseButton.x ? selectionStart-event.mouseButton.x : event.mouseButton.x-selectionStart) << std::endl;
                             
-                            graphs[0].setZoom(selectionStart, event.mouseButton.x);
+                            for (int i=0; i<graphs.size(); i++)
+                                graphs[i].setZoom(selectionStart, event.mouseButton.x);
+
                             selectionArea.setSize(sf::Vector2f(0,selectionArea.getSize().y));
                         }
                     }

@@ -37,7 +37,7 @@ void graphObj::draw(sf::RenderWindow& window) {
 void graphObj::update() { //calculate where vertecies go
 
     vertecies.clear();
-    vertecies = sf::VertexArray(sf::TriangleStrip, static_cast<std::size_t>(vertexCount));
+    vertecies = sf::VertexArray(sf::TriangleStrip, static_cast<std::size_t>(xRange*2));
 
     float value1, value2;
 
@@ -51,7 +51,7 @@ void graphObj::update() { //calculate where vertecies go
     //get local min and max y values to scale graph properly
     getRange(data, xMin, xMax, yMin, yMax, yRange);
 
-    if (debug) std::cout << "data.size() " << data.size() << " xMin: " << xMin << " xMax: " << xMax << " xRange " << xRange << " yMin " << yMin << " yMax " << yMax << " yRange " << yRange;
+    if (debug) std::cout << "data.size() " << data.size() << " xMin: " << xMin << " xMax: " << xMax << " xRange " << xRange << " yMin " << yMin << " yMax " << yMax << " yRange " << yRange << std::endl;
     
     std::string minString(std::to_string(yMin)), maxString(std::to_string(yMax));
 
@@ -62,36 +62,27 @@ void graphObj::update() { //calculate where vertecies go
     max.setString(maxString.substr(0, maxString.length()-4));
 
 
-        for (int j=0; j<xRange&&j<data.size()-1; j++) {
+        for (int j=1; j<xRange&&j<data.size(); j++) {
 
             int x, y;
 
-            float yHeightPixels = (value2-value1)*(view.getSize().y/yRange);
-            int xWidthPixels = view.getSize().x/xRange;
-
-            value2 = stof(data[j+xMin+2]);
-
             //calculate position of each vertex
             x = j*view.getSize().x/xRange; 
-            y = fabs(((value1-yMin)/yRange*view.getSize().y)-view.getSize().y);
+            y = fabs((((std::stof(data[j+xMin]))-yMin)/yRange*view.getSize().y)-view.getSize().y);
 
-            if (debug) std::cout<<"\nline [" << j << "] height = " << (value1-yMin)/yRange*view.getSize().y; 
-
-            if (debug) std::cout << " x: " << j*view.getSize().x/xRange << " y: " << yHeightPixels;
+            if (debug) std::cout<<"line [" << j << "] height = " << ((std::stof(data[j+xMin]))-yMin)/yRange*view.getSize().y << std::endl; 
 
             // push high and low vertex
 
-            if(j*2==vertexCount) {
-                vertexCount+=2;
-                vertecies.resize(vertexCount);
+            if(j*2==vertecies.getVertexCount()) {
+                vertecies.resize(vertecies.getVertexCount()+2);
             }
 
             vertecies[j*2] = sf::Vertex(sf::Vector2f(x,y+(LINE_WIDTH/2))); // high
             vertecies[j*2+1] = sf::Vertex(sf::Vector2f(x,y-(LINE_WIDTH/2))); // low
-            
-            value1 = value2;
+
         }
-        if (debug) std::cout << "\nvertex count: " << vertexCount;
+        if (debug) std::cout << "\nvertex count: " << vertecies.getVertexCount();
     }
 }
 
@@ -126,7 +117,14 @@ void graphObj::setZoom(const int& start, const int& finish) {
 
     xRange = xMax-xMin; 
 
-    std::cout << xMin << " xMax: " << xMax << " xRange " << xRange;
+    std::cout << "xMin: " << xMin << " xMax: " << xMax << " xRange " << xRange << std::endl;
 
-    //update();
+    update();
+}
+
+void graphObj::resetZoom() {
+    xMin = 0;
+    xMax = DEFAULT_RANGE;
+    xRange = DEFAULT_RANGE;
+    update();
 }
